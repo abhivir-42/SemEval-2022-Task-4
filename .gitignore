@@ -1,6 +1,13 @@
 .DS_Store
 .env
 data/
+.venv/
+__pycache__/
+*.pyc
+outputs/
+wandb/
+*.pt
+*.bin
 
 
 
