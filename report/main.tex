@@ -26,13 +26,13 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-We address SemEval 2022 Task 4 Subtask 1: binary classification of paragraphs as containing Patronising and Condescending Language (PCL) towards vulnerable communities. The dataset exhibits a severe class imbalance ($\sim$9.5:1 negative to positive ratio), which the provided RoBERTa-base baseline handles through downsampling, achieving F1\,=\,0.48 on the official dev set. We propose a context-enriched DeBERTa-v3-base approach with three novel components: (1) community-aware input representation that prepends the target community keyword to each paragraph, (2) focal loss to handle class imbalance without discarding training data, and (3) systematic threshold optimisation to maximise F1. Our approach outperforms the baseline on the official dev set. We present a detailed error analysis examining model failures across community keywords and PCL categories.
+We address SemEval 2022 Task 4 Subtask 1: binary classification of paragraphs as containing Patronising and Condescending Language (PCL) towards vulnerable communities. The dataset exhibits a severe class imbalance ($\sim$9.5:1 negative to positive ratio), which the provided RoBERTa-base baseline handles through downsampling, achieving F1\,=\,0.48 on the official dev set. We propose a context-enriched DeBERTa-v3-base approach with three novel components: (1) community-aware input representation that prepends the target community keyword to each paragraph, (2) focal loss to handle class imbalance without discarding training data, and (3) systematic threshold optimisation to maximise F1. Our approach achieves F1\,=\,0.59 on the official dev set, a 22.8\% relative improvement over the baseline. We present a detailed error analysis examining model failures across community keywords and PCL categories.
 
 \vspace{0.5em}
 \noindent\textbf{Leaderboard Name:} PCL-Hunter
 
 \vspace{0.3em}
-\noindent\textbf{Repository:} \url{https://github.com/abhivir42/SemEval-2022-Task-4}
+\noindent\textbf{Repository:} \url{https://github.com/abhivir-42/SemEval-2022-Task-4}
 \end{abstract}
 
 \cleardoublepage
@@ -104,7 +104,7 @@ We perform two distinct EDA techniques on the PCL dataset, each providing insigh
 
 \subsection{Analysis}
 
-Figure~\ref{fig:class_dist} reveals a severe class imbalance of approximately 9.5:1 (No PCL to PCL). Only 993 of the 10,469 paragraphs are labelled as containing patronising language. This imbalance means a naive classifier predicting ``No PCL'' for every input would achieve 90.5\% accuracy---but 0\% F1 on the positive class.
+Figure~\ref{fig:class_dist} reveals a severe class imbalance of approximately 9.5:1 (No PCL to PCL). Only 993 of the 10,637 paragraphs are labelled as containing patronising language. This imbalance means a naive classifier predicting ``No PCL'' for every input would achieve 90.5\% accuracy---but 0\% F1 on the positive class.
 
 Figure~\ref{fig:community_rates} shows PCL prevalence varies substantially by community keyword. Communities relating to economic vulnerability---\textit{homeless} (16.5\%), \textit{poor-families} (16.5\%), and \textit{in-need} (16.3\%)---have the highest PCL rates, approximately 5-6$\times$ higher than \textit{immigrant} (2.8\%) and \textit{migrant} (3.3\%). This suggests that media coverage of economic vulnerability is more prone to patronising framing than coverage of immigration.
 
@@ -134,7 +134,7 @@ Figure~\ref{fig:text_length} and the accompanying statistics (Table~\ref{tab:tex
 \centering
 \caption{Text length statistics (word count) by class.}
 \label{tab:text_stats}
-\begin{tabular}{lcccccc}
+\begin{tabular}{lccccc}
 \hline
 \textbf{Class} & \textbf{Count} & \textbf{Mean} & \textbf{Median} & \textbf{Std} & \textbf{P95} \\
 \hline
@@ -160,7 +160,7 @@ We propose \textbf{Context-Enriched DeBERTa with Focal Loss} for PCL detection, 
 
 \subsection{Model Backbone: DeBERTa-v3-base}
 
-We use \texttt{microsoft/deberta-v3-base} \cite{he2021debertav3} as our backbone, replacing the baseline's \texttt{roberta-base}. DeBERTa-v3 offers two architectural advantages for PCL detection: (1) \textbf{disentangled attention} separates content and position information, enabling the model to better capture positional patterns of PCL (e.g., framing language at paragraph openings), and (2) \textbf{ELECTRA-style pre-training} (replaced token detection) provides a more sample-efficient training signal, which is critical when the positive class contains fewer than 800 training examples.
+We use \texttt{microsoft/deberta-v3-base} \cite{he2021debertav3} as our backbone, replacing the baseline's \texttt{roberta-base} \cite{liu2019roberta}. DeBERTa-v3 offers two architectural advantages for PCL detection: (1) \textbf{disentangled attention} separates content and position information, enabling the model to better capture positional patterns of PCL (e.g., framing language at paragraph openings), and (2) \textbf{ELECTRA-style pre-training} (replaced token detection) provides a more sample-efficient training signal, which is critical when the positive class contains fewer than 800 training examples.
 
 \subsection{Component 1: Community-Aware Input Representation}
 
@@ -223,7 +223,7 @@ Our approach addresses the three core limitations of the baseline:
 
 Additionally, DeBERTa-v3-base is a strictly stronger backbone than RoBERTa-base on NLU benchmarks, and community-aware input provides valuable contextual signal.
 
-Based on the SemEval 2022 competition results (where DeBERTa-based systems with focal loss achieved F1 $\sim$0.55--0.65 on the test set), we expect our approach to comfortably exceed the baseline's F1 of 0.48 and achieve a competitive position on the leaderboard.
+Based on the SemEval 2022 competition results \cite{semeval2022task4} (where DeBERTa-based systems with focal loss achieved F1 $\sim$0.55--0.65 on the test set), we expect our approach to comfortably exceed the baseline's F1 of 0.48 and achieve a competitive position on the leaderboard.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -231,57 +231,110 @@ Based on the SemEval 2022 competition results (where DeBERTa-based systems with 
 
 \section{Global Evaluation}
 
-% PLACEHOLDER: Fill in after training
-Results on the official dev set and test set predictions are submitted as \texttt{dev.txt} and \texttt{test.txt} in the repository root.
+Table~\ref{tab:results} presents results on the official dev set. Our model achieves F1\,=\,0.5895, a \textbf{22.8\% relative improvement} over the RoBERTa-base baseline (F1\,=\,0.48). The optimal classification threshold is 0.38, well below the default 0.5, confirming that threshold optimisation is essential under severe class imbalance. Overall accuracy is 91\%, though this metric is less informative given the 9.5:1 imbalance.
 
 \begin{table}[htbp]
 \centering
 \caption{Results on the official dev set (F1 of PCL class).}
 \label{tab:results}
-\begin{tabular}{lccc}
+\begin{tabular}{lcccc}
 \hline
-\textbf{Model} & \textbf{F1} & \textbf{Precision} & \textbf{Recall} \\
+\textbf{Model} & \textbf{F1} & \textbf{Precision} & \textbf{Recall} & \textbf{Threshold} \\
 \hline
-Baseline (RoBERTa-base) & 0.48 & --- & --- \\
-Our model (DeBERTa-v3 + focal loss) & TBD & TBD & TBD \\
+Baseline (RoBERTa-base) & 0.480 & --- & --- & 0.50 \\
+Our model (DeBERTa-v3 + focal loss) & \textbf{0.590} & 0.520 & 0.680 & 0.38 \\
 \hline
 \end{tabular}
 \end{table}
 
+Predictions for both splits are submitted as \texttt{dev.txt} (2,094 lines) and \texttt{test.txt} (3,832 lines) in the repository root.
+
+The precision--recall trade-off at threshold 0.38 favours recall (0.68) over precision (0.52). This is a deliberate consequence of focal loss, which encourages the model to correctly identify positive examples even at the cost of some false positives. In the context of PCL detection, higher recall is arguably preferable: failing to flag patronising language (false negative) is worse than over-flagging borderline cases (false positive), as the latter can be filtered by human review.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{./figures/threshold_optimization.png}
+\caption{F1 score as a function of classification threshold. The optimal threshold is 0.38, yielding F1\,=\,0.5895.}
+\label{fig:threshold}
+\end{figure}
+
 
 \section{Error Analysis}
 
-% PLACEHOLDER: Fill in after training
-\textit{To be completed after model training. Will include:}
-\begin{itemize}
-\item Confusion matrix analysis
-\item False positive examination (with examples)
-\item False negative examination (with examples)
-\item Discussion of borderline cases (original labels 1--2)
-\end{itemize}
+The model produces 124 false positives and 64 false negatives on the dev set. We examine representative examples from each category to understand failure modes.
+
+\subsection{False Positives}
+
+The most confident false positive ($p = 0.943$) is a paragraph about religious charity tagged with the \textit{in-need} keyword, discussing the Sermon on the Mount and charitable giving. The model likely triggers on the co-occurrence of religious/charitable framing with a vulnerable community keyword---a pattern that frequently accompanies genuine PCL in the training data but here describes factual reporting. More generally, false positives cluster around paragraphs that \textit{describe} aid programmes or charitable interventions without actually being patronising; the model has difficulty distinguishing between reporting \textit{about} help and patronising \textit{framing} of help.
+
+\subsection{False Negatives}
+
+The most confident false negative ($p = 0.043$) involves a paragraph about disability internship programmes, with an original label of 3 (strong PCL). The model assigns very low PCL probability, suggesting it fails to recognise the implicit presupposition that disabled people need special ``opportunities'' framed as generosity. False negatives tend to involve \textit{subtle} PCL where the patronising element relies on world knowledge or implicit assumptions rather than explicit lexical markers.
+
+\subsection{Confusion Matrix}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.65\textwidth]{./figures/confusion_matrix.png}
+\caption{Confusion matrix on the dev set at threshold 0.38. The model correctly identifies 135 of 199 PCL instances (68\% recall) while misclassifying 124 non-PCL paragraphs as PCL.}
+\label{fig:confusion}
+\end{figure}
+
+The confusion matrix (Figure~\ref{fig:confusion}) shows the model correctly classifies 1,771 of 1,895 non-PCL paragraphs (93.5\% specificity) and 135 of 199 PCL paragraphs (67.8\% recall). The asymmetry---higher specificity than recall---reflects the inherent difficulty of detecting subtle PCL compared to recognising clearly non-patronising text.
 
 
 \section{Local Evaluation}
 
-% PLACEHOLDER: Fill in after training
-\textit{To be completed after model training. Will include:}
-\begin{itemize}
-\item Performance by community keyword (Figure~\ref{fig:kw_perf})
-\item Precision-recall curve
-\item Threshold optimisation curve
-\item Ablation study: contribution of each novel component
-\end{itemize}
+\subsection{Per-Keyword Performance}
+
+Figure~\ref{fig:kw_perf} and Table~\ref{tab:keyword} present F1 scores broken down by community keyword.
+
+\begin{table}[htbp]
+\centering
+\caption{Per-keyword F1, precision, and recall on the dev set.}
+\label{tab:keyword}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Keyword} & \textbf{F1} & \textbf{Precision} & \textbf{Recall} & \textbf{Count} \\
+\hline
+in-need     & 0.706 & 0.577 & 0.909 & 226 \\
+migrant     & 0.667 & 0.750 & 0.600 & 207 \\
+vulnerable  & 0.640 & 0.533 & 0.800 & 209 \\
+poor-families & 0.602 & 0.556 & 0.658 & 190 \\
+homeless    & 0.563 & 0.476 & 0.690 & 212 \\
+hopeless    & 0.561 & 0.516 & 0.615 & 217 \\
+refugee     & 0.552 & 0.500 & 0.615 & 188 \\
+disabled    & 0.533 & 0.500 & 0.571 & 194 \\
+women       & 0.438 & 0.389 & 0.500 & 233 \\
+immigrant   & 0.333 & 0.400 & 0.286 & 218 \\
+\hline
+\end{tabular}
+\end{table}
 
 \begin{figure}[htbp]
 \centering
-% \includegraphics[width=0.95\textwidth]{./figures/keyword_performance.png}
-\caption{F1, precision, and recall broken down by community keyword.}
+\includegraphics[width=0.95\textwidth]{./figures/keyword_performance.png}
+\caption{F1, precision, and recall broken down by community keyword on the dev set.}
 \label{fig:kw_perf}
 \end{figure}
 
+Performance varies substantially across keywords. The model performs best on \textit{in-need} (F1\,=\,0.706) and worst on \textit{immigrant} (F1\,=\,0.333). This correlates inversely with the PCL base rate found in our EDA: \textit{immigrant} has the lowest PCL rate in the dataset (2.8\%), meaning the model sees very few positive examples for this community during training. Conversely, \textit{in-need} has both a high PCL rate (16.3\%) and distinctive lexical markers (charity language, appeals to sympathy).
+
+The poor performance on \textit{women} (F1\,=\,0.438) is notable despite a moderate PCL rate, suggesting that PCL directed at women may take linguistically distinct forms (e.g., benevolent sexism) that differ from the charity/aid framing dominant in other categories.
+
+\subsection{Precision--Recall Curve}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{./figures/pr_curve.png}
+\caption{Precision--recall curve for our model on the dev set.}
+\label{fig:pr_curve}
+\end{figure}
+
+The precision--recall curve (Figure~\ref{fig:pr_curve}) shows the trade-off across all thresholds. The area under the curve provides a threshold-independent measure of the model's discriminative ability.
+
 
 %% bibliography
-\bibliographystyle{apa}
 \begin{thebibliography}{9}
 
 \bibitem{perezalmendros2020}
