@@ -1,0 +1,40 @@
+# =============================================================
+# SemEval 2022 Task 4 -- PCL Detection
+# DeBERTa-v3-base + Focal Loss + Threshold Optimization
+# =============================================================
+#
+# INSTALL INSTRUCTIONS:
+#
+#   Local Mac (MPS):
+#     pip install -r requirements.txt
+#
+#   Cluster (CUDA 12.1):
+#     pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#     pip install -r requirements.txt
+#
+# =============================================================
+
+# -- Core deep learning ---
+torch
+torchvision
+
+# -- Transformers (pinned: newer versions have DeBERTa tokenizer bugs) ---
+transformers==4.44.2
+
+# -- Transformers runtime dependencies ---
+accelerate
+datasets
+
+# -- DeBERTa-v3 tokenizer transitive dependencies ---
+sentencepiece
+protobuf
+tiktoken
+
+# -- Data & metrics ---
+numpy
+pandas
+scikit-learn
+
+# -- Plotting ---
+matplotlib
+seaborn

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=pcl_train
 #SBATCH --gres=gpu:1
-#SBATCH --partition=gpgpu
+#SBATCH --partition=t4
 #SBATCH --nodelist=gpuvm14
 #SBATCH --time=02:00:00
 #SBATCH --mem=16G
