@@ -17,10 +17,8 @@
 \begin{document}
 \input{titlepage}
 
-
 % page numbering etc.
 \pagenumbering{roman}
-\clearpage{\pagestyle{empty}\cleardoublepage}
 \setcounter{page}{1}
 \pagestyle{fancy}
 
@@ -35,9 +33,7 @@ We address SemEval 2022 Task 4 Subtask 1: binary classification of paragraphs as
 \noindent\textbf{Repository:} \url{https://github.com/abhivir-42/SemEval-2022-Task-4}
 \end{abstract}
 
-\cleardoublepage
-
-\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--- table of contents
@@ -45,7 +41,7 @@ We address SemEval 2022 Task 4 Subtask 1: binary classification of paragraphs as
 \tableofcontents
 
 
-\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
 \pagenumbering{arabic}
 \setcounter{page}{1}
 \fancyhead[LE,RO]{\slshape \rightmark}
@@ -58,25 +54,25 @@ We review ``Don't Patronize Me! An Annotated Dataset with Patronizing and Condes
 
 \section{Primary Contributions}
 
-This paper makes three primary contributions. First, it introduces the \textbf{Don't Patronize Me! dataset}, a novel resource of 10,637 paragraphs extracted from news stories across 20 English-speaking countries, annotated for the presence of patronising and condescending language (PCL) directed at vulnerable communities such as refugees, homeless people, and immigrants. Second, the authors propose a \textbf{two-level taxonomy of seven PCL categories} organised under three higher-level groups---\textit{The Saviour} (unbalanced power relations, shallow solution), \textit{The Expert} (presupposition, authority voice), and \textit{The Poet} (compassion, metaphor, the poorer the merrier)---grounded in sociolinguistic literature on how media discourse can routinise discrimination. Third, the paper provides \textbf{baseline experiments} across two tasks---binary PCL detection (Task 1) and multi-label PCL categorisation (Task 2)---using SVM, BiLSTM, and transformer-based models (BERT, RoBERTa, DistilBERT), establishing that the task is feasible yet challenging, with RoBERTa achieving the best overall F1 of 70.68 on Task 1.
+This paper makes three primary contributions. First, it introduces the \textbf{Don't Patronize Me! dataset}, a novel resource of 10,637 paragraphs extracted from news stories across 20 English-speaking countries, annotated for patronising and condescending language directed at vulnerable communities. Second, the authors propose a \textbf{two-level taxonomy of seven PCL categories} organised under three higher-level groups: \textit{The Saviour} (unbalanced power relations, shallow solution), \textit{The Expert} (presupposition, authority voice), and \textit{The Poet} (compassion, metaphor, the poorer the merrier). This taxonomy is grounded in sociolinguistic literature on how media discourse can routinise discrimination. Third, the paper provides \textbf{baseline experiments} across binary PCL detection (Task 1) and multi-label PCL categorisation (Task 2) using SVM, BiLSTM, and transformer-based models, establishing that the task is feasible yet challenging, with RoBERTa achieving the best F1 of 70.68 on Task 1.
 
 \section{Technical Strengths}
 
-\textbf{Novelty and significance of the task framing.} The paper identifies a genuinely underexplored area in harmful language detection: language that is patronising rather than overtly hostile. As the authors argue, PCL differs from hate speech and offensive language because it is ``generally used unconsciously and with good intentions,'' making it both socially important and technically challenging. At the time of writing, only Wang and Potts (2019) had addressed condescension computationally, and that work focused on direct interpersonal communication rather than media discourse.
+\textbf{Novelty and significance of the task framing.} The paper identifies a genuinely underexplored area in harmful language detection: language that is patronising rather than overtly hostile. As the authors argue, PCL differs from hate speech because it is ``generally used unconsciously and with good intentions,'' making it both socially important and technically challenging. At the time of writing, only Wang and Potts (2019) had addressed condescension computationally, and that work focused on direct interpersonal communication rather than media discourse.
 
-\textbf{Carefully designed annotation scheme.} The two-step annotation process is methodologically sound. The use of a 3-point scale (0/1/2) per annotator to handle borderline cases, combined into a 5-point aggregated scale, is a pragmatic and transparent approach to managing the inherent subjectivity of the task. The involvement of a third annotator to resolve total disagreements (0 vs.\ 2 cases) adds rigour. Inter-annotator agreement is reported honestly: 41\% Kappa across all labels, rising to 61\% when borderline cases are excluded.
+\textbf{Carefully designed annotation scheme.} The two-step annotation process is methodologically sound. The use of a 3-point scale (0/1/2) per annotator to handle borderline cases, combined into a 5-point aggregated scale, is a pragmatic approach to managing the inherent subjectivity of the task. The involvement of a third annotator to resolve total disagreements (0 vs.\ 2 cases) adds rigour. Inter-annotator agreement is reported honestly: 41\% Kappa across all labels, rising to 61\% when borderline cases are excluded.
 
-\textbf{Thorough error analysis.} Tables~5 and 6 in the paper provide concrete examples of model failures, which is more informative than aggregate metrics alone. The analysis correctly identifies that categories requiring world knowledge (e.g., Metaphor with F1 of 43.4 for RoBERTa, and Shallow Solution) are harder to detect, offering actionable directions for future work.
+\textbf{Thorough error analysis.} Tables~5 and 6 in the paper provide concrete examples of model failures, which is more informative than aggregate metrics alone. The analysis correctly identifies that categories requiring world knowledge (e.g., Metaphor with F1 of 43.4) are harder to detect, offering actionable directions for future work.
 
 \section{Key Weaknesses}
 
-\textbf{Severe class imbalance is insufficiently addressed.} Only 995 of 10,637 paragraphs ($\sim$9.4\%) are positive examples for Task 1, yet the authors report only precision, recall, and F1 for the positive class without discussing how they handled this imbalance during training. There is no mention of oversampling, class weighting, or stratified splitting strategies. The reported metrics would be more convincing with confidence intervals across the 10 folds, as the current single-point estimates make it difficult to assess statistical significance.
+\textbf{Severe class imbalance is insufficiently addressed.} Only 995 of 10,637 paragraphs ($\sim$9.4\%) are positive examples for Task 1, yet the authors do not discuss how they handled this imbalance during training. There is no mention of oversampling, class weighting, or stratified splitting strategies. The reported metrics would be more convincing with confidence intervals across the 10 folds, as single-point estimates make it difficult to assess statistical significance.
 
-\textbf{No ablation or feature analysis.} The paper benchmarks several models but does not investigate what linguistic features drive predictions. The authors note that words like ``us,'' ``they,'' and ``help'' are strong indicators for Unbalanced Power Relations, but this claim is not supported by any feature importance analysis, attention visualisation, or lexical overlap study. An ablation study---such as removing keyword features or testing on out-of-domain vulnerable groups---would strengthen the claims about task difficulty.
+\textbf{No ablation or feature analysis.} The paper benchmarks several models but does not investigate what linguistic features drive predictions. The authors note that words like ``us,'' ``they,'' and ``help'' are strong indicators for Unbalanced Power Relations, but this claim is not supported by any feature importance analysis or attention visualisation. An ablation study (e.g., removing keyword features or testing on out-of-domain vulnerable groups) would strengthen the claims about task difficulty.
 
-\textbf{Span-level annotations are collected but not evaluated.} The annotation process includes careful span-level annotations using BRAT, yet the experiments treat Task 2 as a paragraph-level multi-label classification problem, discarding span boundary information entirely. Span-level evaluation would be more useful in practice for explaining model predictions.
+\textbf{Span-level annotations are collected but not evaluated.} The annotation process includes span-level annotations using BRAT, yet the experiments treat Task 2 as paragraph-level multi-label classification, discarding span boundary information entirely. Span-level evaluation would be more useful for explaining model predictions.
 
-\textbf{Limited discussion of annotator bias.} The three annotators share backgrounds in ``communication, media and data science,'' but the paper does not discuss how their cultural or demographic backgrounds might influence PCL judgements, which are inherently subjective. Furthermore, the keyword-based paragraph selection strategy introduces a systematic bias: paragraphs mentioning vulnerable communities through indirect references would be missed entirely.
+\textbf{Limited discussion of annotator bias.} The three annotators share backgrounds in ``communication, media and data science,'' but the paper does not discuss how their cultural or demographic backgrounds might influence PCL judgements. Furthermore, the keyword-based paragraph selection strategy introduces a systematic bias: paragraphs mentioning vulnerable communities through indirect references would be missed entirely.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,15 +100,15 @@ We perform two distinct EDA techniques on the PCL dataset, each providing insigh
 
 \subsection{Analysis}
 
-Figure~\ref{fig:class_dist} reveals a severe class imbalance of approximately 9.5:1 (No PCL to PCL). Only 993 of the 10,637 paragraphs are labelled as containing patronising language. This imbalance means a naive classifier predicting ``No PCL'' for every input would achieve 90.5\% accuracy---but 0\% F1 on the positive class.
+Figure~\ref{fig:class_dist} reveals a severe class imbalance of approximately 9.5:1 (No PCL to PCL). Only 993 of the 10,637 paragraphs are labelled as containing patronising language. A naive classifier predicting ``No PCL'' for every input would achieve 90.5\% accuracy, but 0\% F1 on the positive class.
 
-Figure~\ref{fig:community_rates} shows PCL prevalence varies substantially by community keyword. Communities relating to economic vulnerability---\textit{homeless} (16.5\%), \textit{poor-families} (16.5\%), and \textit{in-need} (16.3\%)---have the highest PCL rates, approximately 5-6$\times$ higher than \textit{immigrant} (2.8\%) and \textit{migrant} (3.3\%). This suggests that media coverage of economic vulnerability is more prone to patronising framing than coverage of immigration.
+Figure~\ref{fig:community_rates} shows that PCL prevalence varies substantially by community keyword. Communities relating to economic vulnerability, specifically \textit{homeless} (16.5\%), \textit{poor-families} (16.5\%), and \textit{in-need} (16.3\%), have PCL rates approximately 5--6$\times$ higher than \textit{immigrant} (2.8\%) and \textit{migrant} (3.3\%). This suggests that media coverage of economic vulnerability is more prone to patronising framing than coverage of immigration.
 
 \subsection{Impact on Approach}
 
-\textbf{Focal loss over downsampling.} The 9.5:1 imbalance rules out standard cross-entropy training, which would converge to predicting the majority class. The baseline addresses this by downsampling negatives to a 2:1 ratio, discarding $\sim$85\% of negative examples. We instead use focal loss \cite{lin2017focal}, which dynamically down-weights easy examples during training, preserving all data while focusing learning on the informative boundary cases.
+The 9.5:1 imbalance rules out standard cross-entropy training. The baseline addresses this by downsampling negatives to a 2:1 ratio, discarding $\sim$85\% of negative examples. We instead adopt focal loss \cite{lin2017focal}, which dynamically down-weights easy examples during training, preserving all data while focusing learning on boundary cases (detailed in Section~3.1.2).
 
-\textbf{Community-aware input.} The 6$\times$ variation in PCL rates across communities (2.8\% to 16.5\%) motivates an explicit community-aware input representation. By prepending \texttt{[Community: keyword]} to each paragraph, we enable the model to learn community-specific PCL patterns.
+The 6$\times$ variation in PCL rates across communities motivates an explicit community-aware input representation, where we prepend the target community keyword to each paragraph (detailed in Section~3.1.1).
 
 
 \section{Technique 2: Text Length Distribution}
@@ -128,7 +124,7 @@ Figure~\ref{fig:community_rates} shows PCL prevalence varies substantially by co
 
 \subsection{Analysis}
 
-Figure~\ref{fig:text_length} and the accompanying statistics (Table~\ref{tab:text_stats}) reveal that PCL paragraphs are systematically longer than non-PCL paragraphs. The median word count for PCL texts is 47 words versus 42 for non-PCL. PCL texts also have a heavier right tail, with the 95th percentile at 113 words compared to 100 for non-PCL.
+Figure~\ref{fig:text_length} and Table~\ref{tab:text_stats} reveal that PCL paragraphs are systematically longer than non-PCL paragraphs. The median word count for PCL texts is 47 words versus 42 for non-PCL, with PCL texts also exhibiting a heavier right tail (95th percentile: 113 vs 100 words).
 
 \begin{table}[htbp]
 \centering
@@ -148,7 +144,7 @@ This difference is intuitive: patronising language often involves elaborate just
 
 \subsection{Impact on Approach}
 
-The overall 95th percentile word count is 102 words. Applying a sub-word expansion factor of $\sim$1.3$\times$ (typical for DeBERTa/RoBERTa tokenisers on English text) gives an estimated 95th percentile token count of $\sim$133 tokens. We set \texttt{max\_sequence\_length\,=\,256}, which comfortably captures 99\%+ of paragraphs without excessive padding, balancing information retention against computational efficiency.
+The overall 95th percentile word count is 102 words. Applying a sub-word expansion factor of $\sim$1.3$\times$ (typical for DeBERTa tokenisers on English text) gives an estimated 95th percentile of $\sim$133 tokens. We set \texttt{max\_sequence\_length\,=\,256}, which captures 99\%+ of paragraphs without excessive padding, balancing information retention against computational efficiency.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -160,7 +156,7 @@ We propose \textbf{Context-Enriched DeBERTa with Focal Loss} for PCL detection, 
 
 \subsection{Model Backbone: DeBERTa-v3-base}
 
-We use \texttt{microsoft/deberta-v3-base} \cite{he2021debertav3} as our backbone, replacing the baseline's \texttt{roberta-base} \cite{liu2019roberta}. DeBERTa-v3 offers two architectural advantages for PCL detection: (1) \textbf{disentangled attention} separates content and position information, enabling the model to better capture positional patterns of PCL (e.g., framing language at paragraph openings), and (2) \textbf{ELECTRA-style pre-training} (replaced token detection) provides a more sample-efficient training signal, which is critical when the positive class contains fewer than 800 training examples.
+We use \texttt{microsoft/deberta-v3-base} \cite{he2021debertav3} as our backbone, replacing the baseline's \texttt{roberta-base} \cite{liu2019roberta}. DeBERTa-v3 offers two architectural advantages: (1) \textbf{disentangled attention} separates content and position information, enabling the model to better capture positional patterns of PCL (e.g., framing language at paragraph openings), and (2) \textbf{ELECTRA-style pre-training} (replaced token detection) provides a more sample-efficient training signal, which is critical when the positive class contains fewer than 800 training examples.
 
 \subsection{Component 1: Community-Aware Input Representation}
 
@@ -172,7 +168,7 @@ Rather than feeding raw paragraph text to the model, we prepend a community cont
 
 For example: \texttt{[Community: homeless] After Vatican controversy, McDonald's helps feed homeless in Rome.}
 
-This is motivated by our EDA finding (Section 2.1) that PCL rates vary 6$\times$ across communities. The prefix enables DeBERTa's attention mechanism to learn community-specific PCL patterns---for instance, ``shallow solution'' PCL clusters with \textit{homeless} and \textit{in-need}, while ``presupposition'' clusters with \textit{women} and \textit{hopeless}.
+As shown in our EDA (Section~2.1), PCL rates vary 6$\times$ across communities. The prefix enables DeBERTa's attention mechanism to learn community-specific PCL patterns. For instance, ``shallow solution'' PCL clusters with \textit{homeless} and \textit{in-need}, while ``presupposition'' clusters with \textit{women} and \textit{hopeless}.
 
 \subsection{Component 2: Focal Loss}
 
@@ -182,7 +178,7 @@ We replace the baseline's downsampling + cross-entropy with focal loss \cite{lin
 \text{FL}(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)
 \end{equation}
 
-where $p_t$ is the model's estimated probability of the correct class, $\alpha = 0.75$ up-weights the positive class, and $\gamma = 2.0$ modulates the focusing effect. When $p_t$ is high (easy example), $(1 - p_t)^\gamma$ is small, reducing its contribution to the gradient. This focuses training on the hard examples near the decision boundary---exactly the subtle PCL instances where the task is most challenging.
+where $p_t$ is the model's estimated probability of the correct class, $\alpha = 0.75$ up-weights the positive class, and $\gamma = 2.0$ modulates the focusing effect. When $p_t$ is high (easy example), $(1 - p_t)^\gamma$ is small, reducing its contribution to the gradient. This focuses training on hard examples near the decision boundary, which is precisely where subtle PCL instances lie.
 
 Compared to the baseline's 2:1 downsampling (which discards $\sim$6,000 negative examples), focal loss trains on \textbf{all 8,375 examples}, preserving signal about what non-patronising language looks like.
 
@@ -213,7 +209,7 @@ Seed & 42 \\
 
 \section{Rationale and Expected Outcome}
 
-Our approach addresses the three core limitations of the baseline:
+Our approach addresses three core limitations of the baseline:
 
 \begin{enumerate}
 \item \textbf{Undertrained model} $\rightarrow$ 5 epochs with early stopping (vs.\ baseline's 1 epoch)
@@ -221,9 +217,7 @@ Our approach addresses the three core limitations of the baseline:
 \item \textbf{Suboptimal threshold} $\rightarrow$ systematic F1-maximising threshold search
 \end{enumerate}
 
-Additionally, DeBERTa-v3-base is a strictly stronger backbone than RoBERTa-base on NLU benchmarks, and community-aware input provides valuable contextual signal.
-
-Based on the SemEval 2022 competition results \cite{semeval2022task4} (where DeBERTa-based systems with focal loss achieved F1 $\sim$0.55--0.65 on the test set), we expect our approach to comfortably exceed the baseline's F1 of 0.48 and achieve a competitive position on the leaderboard.
+Additionally, DeBERTa-v3-base is a strictly stronger backbone than RoBERTa-base on NLU benchmarks, and community-aware input provides valuable contextual signal. Based on the SemEval 2022 competition results \cite{semeval2022task4}, where DeBERTa-based systems with focal loss achieved F1 $\sim$0.55--0.65 on the test set, we expect our approach to comfortably exceed the baseline.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -231,7 +225,7 @@ Based on the SemEval 2022 competition results \cite{semeval2022task4} (where DeB
 
 \section{Global Evaluation}
 
-Table~\ref{tab:results} presents results on the official dev set. Our model achieves F1\,=\,0.5895, a \textbf{22.8\% relative improvement} over the RoBERTa-base baseline (F1\,=\,0.48). The optimal classification threshold is 0.38, well below the default 0.5, confirming that threshold optimisation is essential under severe class imbalance. Overall accuracy is 91\%, though this metric is less informative given the 9.5:1 imbalance.
+Table~\ref{tab:results} presents results on the official dev set. Our model achieves F1\,=\,0.5895, a \textbf{22.8\% relative improvement} over the RoBERTa-base baseline (F1\,=\,0.48). The optimal classification threshold is 0.38, well below the default 0.5, confirming that threshold optimisation is essential under severe class imbalance.
 
 \begin{table}[htbp]
 \centering
@@ -241,15 +235,13 @@ Table~\ref{tab:results} presents results on the official dev set. Our model achi
 \hline
 \textbf{Model} & \textbf{F1} & \textbf{Precision} & \textbf{Recall} & \textbf{Threshold} \\
 \hline
-Baseline (RoBERTa-base) & 0.480 & --- & --- & 0.50 \\
+Baseline (RoBERTa-base) & 0.480 & -- & -- & 0.50 \\
 Our model (DeBERTa-v3 + focal loss) & \textbf{0.590} & 0.520 & 0.680 & 0.38 \\
 \hline
 \end{tabular}
 \end{table}
 
-Predictions for both splits are submitted as \texttt{dev.txt} (2,094 lines) and \texttt{test.txt} (3,832 lines) in the repository root.
-
-The precision--recall trade-off at threshold 0.38 favours recall (0.68) over precision (0.52). This is a deliberate consequence of focal loss, which encourages the model to correctly identify positive examples even at the cost of some false positives. In the context of PCL detection, higher recall is arguably preferable: failing to flag patronising language (false negative) is worse than over-flagging borderline cases (false positive), as the latter can be filtered by human review.
+Predictions are submitted as \texttt{dev.txt} (2,094 lines) and \texttt{test.txt} (3,832 lines) in the repository root. The model favours recall (0.68) over precision (0.52) at threshold 0.38. In practice, higher recall is preferable for PCL detection: missing patronising language (false negative) is worse than over-flagging borderline cases (false positive), as the latter can be filtered by human review.
 
 \begin{figure}[htbp]
 \centering
@@ -261,15 +253,15 @@ The precision--recall trade-off at threshold 0.38 favours recall (0.68) over pre
 
 \section{Error Analysis}
 
-The model produces 124 false positives and 64 false negatives on the dev set. We examine representative examples from each category to understand failure modes.
+The model produces 124 false positives and 64 false negatives on the dev set.
 
 \subsection{False Positives}
 
-The most confident false positive ($p = 0.943$) is a paragraph about religious charity tagged with the \textit{in-need} keyword, discussing the Sermon on the Mount and charitable giving. The model likely triggers on the co-occurrence of religious/charitable framing with a vulnerable community keyword---a pattern that frequently accompanies genuine PCL in the training data but here describes factual reporting. More generally, false positives cluster around paragraphs that \textit{describe} aid programmes or charitable interventions without actually being patronising; the model has difficulty distinguishing between reporting \textit{about} help and patronising \textit{framing} of help.
+The most confident false positive ($p = 0.943$) is a paragraph about religious charity tagged with the \textit{in-need} keyword, discussing the Sermon on the Mount and charitable giving. The model likely triggers on the co-occurrence of religious/charitable framing with a vulnerable community keyword, a pattern that frequently accompanies genuine PCL in the training data but here describes factual reporting. More broadly, false positives cluster around paragraphs that \textit{describe} aid programmes without actually being patronising; the model struggles to distinguish reporting \textit{about} help from patronising \textit{framing} of help.
 
 \subsection{False Negatives}
 
-The most confident false negative ($p = 0.043$) involves a paragraph about disability internship programmes, with an original label of 3 (strong PCL). The model assigns very low PCL probability, suggesting it fails to recognise the implicit presupposition that disabled people need special ``opportunities'' framed as generosity. False negatives tend to involve \textit{subtle} PCL where the patronising element relies on world knowledge or implicit assumptions rather than explicit lexical markers.
+The most confident false negative ($p = 0.043$) involves a paragraph about disability internship programmes, with an original label of 3 (strong PCL). The model assigns very low PCL probability, suggesting it fails to recognise the implicit presupposition that disabled people need special ``opportunities'' framed as generosity. False negatives tend to involve subtle PCL where the patronising element relies on world knowledge or implicit assumptions rather than explicit lexical markers.
 
 \subsection{Confusion Matrix}
 
@@ -280,14 +272,14 @@ The most confident false negative ($p = 0.043$) involves a paragraph about disab
 \label{fig:confusion}
 \end{figure}
 
-The confusion matrix (Figure~\ref{fig:confusion}) shows the model correctly classifies 1,771 of 1,895 non-PCL paragraphs (93.5\% specificity) and 135 of 199 PCL paragraphs (67.8\% recall). The asymmetry---higher specificity than recall---reflects the inherent difficulty of detecting subtle PCL compared to recognising clearly non-patronising text.
+The model achieves 93.5\% specificity on non-PCL paragraphs but only 67.8\% recall on PCL paragraphs (Figure~\ref{fig:confusion}). This asymmetry reflects the inherent difficulty of detecting subtle PCL compared to recognising clearly non-patronising text.
 
 
 \section{Local Evaluation}
 
 \subsection{Per-Keyword Performance}
 
-Figure~\ref{fig:kw_perf} and Table~\ref{tab:keyword} present F1 scores broken down by community keyword.
+Table~\ref{tab:keyword} and Figure~\ref{fig:kw_perf} present F1 scores broken down by community keyword.
 
 \begin{table}[htbp]
 \centering
@@ -318,7 +310,7 @@ immigrant   & 0.333 & 0.400 & 0.286 & 218 \\
 \label{fig:kw_perf}
 \end{figure}
 
-Performance varies substantially across keywords. The model performs best on \textit{in-need} (F1\,=\,0.706) and worst on \textit{immigrant} (F1\,=\,0.333). This correlates inversely with the PCL base rate found in our EDA: \textit{immigrant} has the lowest PCL rate in the dataset (2.8\%), meaning the model sees very few positive examples for this community during training. Conversely, \textit{in-need} has both a high PCL rate (16.3\%) and distinctive lexical markers (charity language, appeals to sympathy).
+Performance varies substantially across keywords. The model performs best on \textit{in-need} (F1\,=\,0.706) and worst on \textit{immigrant} (F1\,=\,0.333). This correlates with the PCL base rates from our EDA: \textit{immigrant} has the lowest PCL rate (2.8\%), so the model sees very few positive examples for this community during training. Conversely, \textit{in-need} has both a high PCL rate (16.3\%) and distinctive lexical markers such as charity language and appeals to sympathy.
 
 The poor performance on \textit{women} (F1\,=\,0.438) is notable despite a moderate PCL rate, suggesting that PCL directed at women may take linguistically distinct forms (e.g., benevolent sexism) that differ from the charity/aid framing dominant in other categories.
 
@@ -327,11 +319,9 @@ The poor performance on \textit{women} (F1\,=\,0.438) is notable despite a moder
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.75\textwidth]{./figures/pr_curve.png}
-\caption{Precision--recall curve for our model on the dev set.}
+\caption{Precision--recall curve on the dev set. The area under the curve provides a threshold-independent measure of discriminative ability.}
 \label{fig:pr_curve}
 \end{figure}
-
-The precision--recall curve (Figure~\ref{fig:pr_curve}) shows the trade-off across all thresholds. The area under the curve provides a threshold-independent measure of the model's discriminative ability.
 
 
 %% bibliography
