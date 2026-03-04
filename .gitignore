@@ -1,12 +1,24 @@
+# OS
 .DS_Store
+
+# Environment
 .env
 .venv/
+
+# Python
 __pycache__/
 *.pyc
+
+# Training artifacts
 outputs/
 wandb/
 *.pt
 *.bin
-.venv/
 
+# Non-submission reference materials
+reference/
 
+# Temporary files
+results.tar.gz
+report.zip
+report/submission_1.pdf
