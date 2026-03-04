@@ -14,6 +14,9 @@ outputs/
 wandb/
 *.pt
 *.bin
+*.safetensors
+*.npy
+BestModel/output/seed_*/
 
 # Non-submission reference materials
 reference/
