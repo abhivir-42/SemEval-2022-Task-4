@@ -1,0 +1,11 @@
+{
+  "model_name": "microsoft/deberta-v3-base",
+  "max_length": 256,
+  "community_aware": true,
+  "optimal_threshold": 0.3799999999999999,
+  "dev_f1": 0.5895196506550219,
+  "default_f1": 0.5856079404466501,
+  "focal_alpha": 0.75,
+  "focal_gamma": 2.0,
+  "seed": 42
+}
